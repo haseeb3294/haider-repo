@@ -3,13 +3,13 @@ const dotenv = require("dotenv");
 const ConnectDB = require("./src/utils/db.js");
 const cors = require("cors");
 const { scrapePropertyData } = require("./scraper.js");
-const userRoutes = require("./src/routes/userRoutes.js")
-
+const userRoutes = require("./src/routes/userRoutes.js");
 
 dotenv.config();
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
 
