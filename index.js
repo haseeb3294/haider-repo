@@ -1,6 +1,12 @@
 const express = require("express");
+const dotenv = require("dotenv");
+const ConnectDB = require("./src/utils/db.js");
 const cors = require("cors");
 const { scrapePropertyData } = require("./scraper.js");
+const userRoutes = require("./src/routes/userRoutes.js")
+
+
+dotenv.config();
 
 const app = express();
 app.use(cors());
@@ -24,6 +30,9 @@ for (let a = 0; a < arr.length; a++) {
   newArr.set(arr[a], a);
 }
 
+// Routes
+app.use("/api/v1/users", userRoutes);
+
 console.log("result", result);
 
 app.get("/", (req, res) => {
@@ -45,5 +54,16 @@ app.get("/scrape", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// Connect DB and start server
+ConnectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server running at port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to connect DB:", err.message);
+  });
 
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
